@@ -1,10 +1,20 @@
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class Grid : MonoBehaviour {
-    public float waterLevel = .4f;
-    public float scale = .1f;
-    public int size = 100;
+    [Header("Setting Map")]
+    [SerializeField] private float waterLevel = .4f;
+    [SerializeField] private float scale = .1f;
+    [SerializeField] private int size = 100;
+
+    [Header("Tile Map")]
+    [SerializeField] private Tile waterTile;
+    [SerializeField] private Tile landTile; 
+
+    [Header("Tile Base")]
+    [SerializeField] private Tilemap tilemap;
 
     Cell[,] grid;
 
@@ -25,6 +35,13 @@ public class Grid : MonoBehaviour {
                 grid[x, y] = cell;
             }
         }
+
+        DrawTilemap(grid);
+    }
+
+    public void ClearGrid()
+    {
+        tilemap.ClearAllTiles();
     }
 
     private float[,] GenerateNoiseMap() {
@@ -52,36 +69,51 @@ public class Grid : MonoBehaviour {
         return fallOffMap;
     }
 
-    private void OnDrawGizmos() {
-        if (grid == null) return;
+    private void DrawTilemap(Cell[,] grid) {
+        if (grid == null) {
+            Debug.LogError("Grid is null.");
+            return;
+        }
 
-        float offset = size / 2f;
+        tilemap.ClearAllTiles();
+        
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 Cell cell = grid[x, y];
-                Gizmos.color = cell.isWater ? Color.blue : Color.green;
-                Vector3 pos = new Vector3(x - offset, y - offset, 0);
-                Gizmos.DrawCube(pos, Vector3.one);
+                if (cell == null) {
+                    Debug.LogWarning($"Cell at {x},{y} is null.");
+                    continue;
+                }
+                
+                Vector3Int tilePosition = new Vector3Int(x, y, 0);
+                Tile tile = cell.isWater ? waterTile : landTile;
+                tilemap.SetTile(tilePosition, tile);
             }
         }
     }
 }
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(Grid))]
-public class GridEditor : Editor
-{
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(Grid))]
+    public class GridEditor : Editor
     {
-        DrawDefaultInspector();
-
-        Grid grid = (Grid)target;
-
-        if (GUILayout.Button("Generate Random Grid"))
+        public override void OnInspectorGUI()
         {
-            grid.GenerateGrid();
-            EditorUtility.SetDirty(grid);
+            DrawDefaultInspector();
+
+            Grid grid = (Grid)target;
+
+            if (GUILayout.Button("Generate Random Grid"))
+            {
+                grid.GenerateGrid();
+                EditorUtility.SetDirty(grid);
+            }
+
+            if (GUILayout.Button("Clear Grid"))
+            {
+                grid.ClearGrid();
+                EditorUtility.SetDirty(grid);
+            }
         }
     }
-}
 #endif
