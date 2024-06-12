@@ -77,6 +77,7 @@ public class Grid : MonoBehaviour {
 
         tilemap.ClearAllTiles();
         
+        float offSet = size / 2f;
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 Cell cell = grid[x, y];
@@ -85,7 +86,7 @@ public class Grid : MonoBehaviour {
                     continue;
                 }
                 
-                Vector3Int tilePosition = new Vector3Int(x, y, 0);
+                Vector3Int tilePosition = new Vector3Int((int)(x - offSet), (int)(y - offSet), 0);
                 Tile tile = cell.isWater ? waterTile : landTile;
                 tilemap.SetTile(tilePosition, tile);
             }

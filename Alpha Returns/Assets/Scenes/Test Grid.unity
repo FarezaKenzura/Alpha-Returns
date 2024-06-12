@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waterLevel: 0.4
   scale: 0.1
-  size: 100
+  size: 50
   waterTile: {fileID: 11400000, guid: ecba5df4b6601a54d9d770e5251ea911, type: 2}
   landTile: {fileID: 11400000, guid: a22fd2dd01a515c44ad5e6c5e526ec6d, type: 2}
   tilemap: {fileID: 1140904216}
