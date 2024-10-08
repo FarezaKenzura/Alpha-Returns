@@ -153,11 +153,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8469c1bd779bbff478e48b4d679182da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterLevel: 0.4
-  scale: 0.1
-  size: 50
+  landSizeX: 10
+  landSizeY: 5
+  sizeX: 18
+  sizeY: 10
   waterTile: {fileID: 11400000, guid: ecba5df4b6601a54d9d770e5251ea911, type: 2}
   landTile: {fileID: 11400000, guid: a22fd2dd01a515c44ad5e6c5e526ec6d, type: 2}
+  obstacleTile: {fileID: 11400000, guid: 40684cee0f511e949a009ca766c77d5b, type: 2}
   tilemap: {fileID: 1140904216}
 --- !u!156049354 &852179
 Grid:

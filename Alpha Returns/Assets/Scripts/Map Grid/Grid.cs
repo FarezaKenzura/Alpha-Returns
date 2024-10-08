@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 
 public class Grid : MonoBehaviour {
     [Header("Setting Map")]
-    [SerializeField] private float waterLevel = .4f;
-    [SerializeField] private float scale = .1f;
-    [SerializeField] private int size = 100;
+    [SerializeField] private int landSizeX = 6;
+    [SerializeField] private int landSizeY = 6;
+    [SerializeField] private int sizeX = 20;
+    [SerializeField] private int sizeY = 20;
 
     [Header("Tile Map")]
     [SerializeField] private Tile waterTile;
-    [SerializeField] private Tile landTile; 
+    [SerializeField] private Tile landTile;
+    [SerializeField] private Tile obstacleTile;
 
     [Header("Tile Base")]
     [SerializeField] private Tilemap tilemap;
@@ -20,77 +21,70 @@ public class Grid : MonoBehaviour {
 
     public void GenerateGrid()
     {
-        float[,] noiseMap = GenerateNoiseMap();
-        float[,] fallOffMap = GenerateFallOffMap();
+        grid = new Cell[sizeX, sizeY];
 
-        grid = new Cell[size, size];
-        for (int y = 0; y < size; y++)
-        {
-            for (int x = 0; x < size; x++)
-            {
-                float noiseValue = noiseMap[x, y];
-                noiseValue -= fallOffMap[x, y];
-                bool isWater = noiseValue < waterLevel;
-                Cell cell = new Cell(isWater);
-                grid[x, y] = cell;
-            }
-        }
-
+        GenerateRectangularLandGrid();
         DrawTilemap(grid);
     }
 
-    public void ClearGrid()
+    private void GenerateRectangularLandGrid()
     {
-        tilemap.ClearAllTiles();
-    }
+        int landStartX = (sizeX - landSizeX) / 2;
+        int landStartY = (sizeY - landSizeY) / 2;
 
-    private float[,] GenerateNoiseMap() {
-        float[,] noiseMap = new float[size, size];
-        (float xOffSet, float yOffSet) = (Random.Range(-10000f, 10000f), Random.Range(-10000f, 10000f));
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                float noiseValue = Mathf.PerlinNoise(x * scale + xOffSet, y * scale + yOffSet);
-                noiseMap[x, y] = noiseValue;
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                bool isWater = !(x >= landStartX && x < landStartX + landSizeX && 
+                                 y >= landStartY && y < landStartY + landSizeY);
+
+                Cell cell = new Cell(isWater);
+                grid[x, y] = cell;
+
+                if (!isWater && Random.Range(0f, 1f) > 0.85f)
+                {
+                    cell.hasObstacle = true;
+                }
             }
         }
-        return noiseMap;
     }
 
-    private float[,] GenerateFallOffMap() {
-        float[,] fallOffMap = new float[size, size];
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                float xv = x / (float)size * 2 - 1;
-                float yv = y / (float)size * 2 - 1;
-                float v = Mathf.Max(Mathf.Abs(xv), Mathf.Abs(yv));
-                fallOffMap[x, y] = Mathf.Pow(v, 3f) / (Mathf.Pow(v, 3f) + Mathf.Pow(2.2f - 2.2f * v, 3f));
-            }
-        }
-        return fallOffMap;
-    }
-
-    private void DrawTilemap(Cell[,] grid) {
+    private void DrawTilemap(Cell[,] grid)
+    {
         if (grid == null) {
             Debug.LogError("Grid is null.");
             return;
         }
 
         tilemap.ClearAllTiles();
-        
-        float offSet = size / 2f;
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+
+        int offsetX = (sizeX / 2);
+        int offsetY = (sizeY / 2);
+
+        for (int y = 0; y < sizeY; y++) {
+            for (int x = 0; x < sizeX; x++) {
                 Cell cell = grid[x, y];
                 if (cell == null) {
-                    Debug.LogWarning($"Cell at {x},{y} is null.");
                     continue;
                 }
-                
-                Vector3Int tilePosition = new Vector3Int((int)(x - offSet), (int)(y - offSet), 0);
+
+                Vector3Int tilePosition = new Vector3Int(x - offsetX, y - offsetY, 0);
+
                 Tile tile = cell.isWater ? waterTile : landTile;
                 tilemap.SetTile(tilePosition, tile);
+
+                if (!cell.isWater && cell.hasObstacle)
+                {
+                    tilemap.SetTile(tilePosition, obstacleTile);
+                }
             }
         }
+    }
+
+    public void ClearGrid()
+    {
+        tilemap.ClearAllTiles();
     }
 }
 
