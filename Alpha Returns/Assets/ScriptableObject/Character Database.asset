@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8914edcc5282a4e9499085dfe7e81e, type: 3}
+  m_Name: Character Database
+  m_EditorClassIdentifier: Assembly-CSharp::SOCharacterData
+  Characters:
+  - CharacterName: Lyra
+    Chats:
+    - Pose: Normal
+      Chat: {fileID: 641209362, guid: 56106a7072648f54e875b430762688a6, type: 3}
+    Portraits:
+    - Expression: Happy
+      Portrait: {fileID: -409617946, guid: 56106a7072648f54e875b430762688a6, type: 3}
+  - CharacterName: Aris
+    Chats:
+    - Pose: Normal
+      Chat: {fileID: 458147323, guid: 56106a7072648f54e875b430762688a6, type: 3}
+    Portraits:
+    - Expression: Happy
+      Portrait: {fileID: -409617946, guid: 56106a7072648f54e875b430762688a6, type: 3}

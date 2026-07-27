@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2069e64f8ba5003439de9e9c28116386, type: 3}
+  m_Name: Story Database
+  m_EditorClassIdentifier: Assembly-CSharp::SOStoryData
+  Chapters:
+  - chapterID: C1
+    chapterName: Gods and Monster
+    inkJSON: {fileID: 4900000, guid: 66b6564ba3827634aa635e1b77475b44, type: 3}
+  - chapterID: C2
+    chapterName: Revival
+    inkJSON: {fileID: 4900000, guid: 1695adaf3f7b2994482ad4b58a66d20e, type: 3}
